@@ -18,7 +18,19 @@ def get_tiny_images(image_paths):
         tiny image features : (N, d) matrix of resized and then vectorized tiny
         images. E.g. if the images are resized to 16x16, d would equal 256.
     '''
+
+    size = 16, 16
+
+    tiny_images = []
+
+    for path in image_paths:
+        img = Image.open(path)
+        resized_img = np.array(img.resize(size, Image.HAMMING)).flatten()
+        tiny_images.append(resized_img)
     
+    tiny_images = np.array(tiny_images)
+    tiny_images = (tiny_images - tiny_images.mean()) / np.linalg.norm(tiny_images)
+
     ##############################################################################
     #                                END OF YOUR CODE                            #
     ##############################################################################

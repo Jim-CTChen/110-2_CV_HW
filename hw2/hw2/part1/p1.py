@@ -1,4 +1,3 @@
-from __future__ import print_function
 from random import shuffle
 import os
 import argparse
@@ -7,9 +6,9 @@ import pickle
 from get_tiny_images import get_tiny_images
 from build_vocabulary import build_vocabulary
 from get_bags_of_sifts import get_bags_of_sifts
-
 from nearest_neighbor_classify import nearest_neighbor_classify
 from sklearn.metrics import confusion_matrix
+
 import matplotlib.pyplot as plt
 import numpy as np
 from glob import glob
@@ -24,7 +23,6 @@ from glob import glob
 
 #The starter code does not crash when run unmodified 
 #and you can get a preview of how results are presented.
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--feature', help='feature', type=str, default='dumy_feature')
 parser.add_argument('--classifier', help='classifier', type=str, default='dumy_classifier')
@@ -62,7 +60,6 @@ def main():
     print("Getting paths and labels for all train and test data")
     train_image_paths, test_image_paths, train_labels, test_labels = \
         get_image_paths(DATA_PATH, CATEGORIES, NUM_TRAIN_PER_CAT)
-
     # TODO Step 1:
     # Represent each image with the appropriate feature
     # Each function to construct features should return an N x d matrix, where

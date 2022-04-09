@@ -56,6 +56,22 @@ def build_vocabulary(image_paths, vocab_size):
     Output :
         Clusters centers of Kmeans
     '''
+    print('Start building vocabulary...')
+
+    all_descriptors = []
+    for path in image_paths:
+        img = np.array(Image.open(path))
+        _, descriptors = dsift(img, step=5, fast=True)
+        all_descriptors.append(descriptors)
+        # print(f'descriptor shape: {descriptor.shape}')
+
+    all_descriptors = np.array(all_descriptors).reshape(-1, 128)
+    # print(f'descriptors shape: {descriptors.shape}')
+    # print(f'vocab_size: {vocab_size}')
+
+    vocab = kmeans(all_descriptors.astype(np.float32), vocab_size)
+    print(f'vocabulary shape: {vocab.shape}')
+
 
     ##################################################################################
     #                                END OF YOUR CODE                                #

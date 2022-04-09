@@ -1,6 +1,5 @@
 from PIL import Image
 import numpy as np
-from scipy.spatial import distance
 import pickle
 import scipy.spatial.distance as distance
 from cyvlfeat.sift.dsift import dsift
@@ -32,6 +31,26 @@ def get_bags_of_sifts(image_paths):
     Output : 
         image_feats : (N, d) feature, each row represent a feature of an image
     '''
+    print('Start extracting feature in training set...')
+
+    image_feats = []
+
+    with open('vocab.pkl', 'rb') as handle:
+        vocab = pickle.load(handle)
+
+    num_of_cluster = vocab.shape[0]
+
+    for path in image_paths:
+        img = np.array(Image.open(path))
+        _, descriptors = dsift(img, step=5, fast=True)
+        nearest_cluster = []
+        for descriptor in descriptors:
+            # find nearest cluster for each feature(descriptor)
+            distance_list = np.array([distance.cdist(np.expand_dims(descriptor, axis=0), np.expand_dims(v, axis=0), 'euclidean') for v in vocab]).flatten()
+            nearest_cluster.append(distance_list.argmin())
+        cluster_histogram, _ = np.histogram(nearest_cluster, bins=np.arange(num_of_cluster))
+        image_feats.append(cluster_histogram.tolist())
+
     
     #############################################################################
     #                                END OF YOUR CODE                           #

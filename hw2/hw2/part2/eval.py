@@ -9,7 +9,7 @@ import argparse
 from tqdm import tqdm
 
 from tool import load_parameters
-from myModels import myResnet, myLeNet
+from myModels import myResNet18, myLeNet, myResNet34, ResNet34, ResNet18
 from myDatasets import cifar10_dataset
 
 
@@ -33,21 +33,41 @@ def test_result(test_loader, model, device):
 def main():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path', help='model_path', type=str, default='')
+    model_choice = ['myLeNet', 'myResNet18', 'myResNet34', 'ResNet18', 'ResNet34']
+    parser.add_argument('--model', help='default ResNet18, ', type=str, default='ResNet18', choices=model_choice)
+    # parser.add_argument('--path', help='model_path', type=str, default=f'./save_dir/{model_name}/best_model.pt')
     parser.add_argument('--test_anno', help='annotaion for test image', type=str, default= './p2_data/annotations/public_test_annos.json')
     args = parser.parse_args()
 
-    path = args.path
+    model_name = args.model
+    # path = args.path
+    path = f'./save_dir/{model_name}/best_model.pt'
     test_anno = args.test_anno
+    num_out = 10
     
     # change your model here 
 
-    ## TO DO ## 
-    # Indicate the model you use here
-    model = myLeNet(num_out=10)    
+    ## Modify here if you want to change your model ##
+    if model_name == 'myLeNet':
+        model = myLeNet(num_out=num_out)
+
+    # myResNet18
+    elif model_name == 'myResNet18':
+        model = myResNet18(num_out=num_out)
+
+    # myResnet34
+    elif model_name == 'myResNet34': 
+        model = myResNet34(num_out=num_out)
+
+    # pytorch vision
+    elif model_name == 'ResNet18':
+        model = ResNet18(num_out=num_out)
+
+    elif model_name == 'ResNet34':
+        model = ResNet34(num_out=num_out)
     
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    #device = torch.device('cpu')
+    # device = torch.device('cpu')
     
     # Simply load parameters
     load_parameters(model=model, path=path)

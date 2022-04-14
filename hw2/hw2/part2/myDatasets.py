@@ -45,7 +45,8 @@ def get_cifar10_train_val_set(root, ratio=0.9, cv=0):
     train_transform = transforms.Compose([
                 ## TO DO ##
                 # You can add some transforms here
-                
+                transforms.RandomHorizontalFlip(),
+                transforms.RandomRotation(15),
                 # ToTensor is needed to convert the type, PIL IMG,  to the typ, float tensor.  
                 transforms.ToTensor(),
                 
@@ -95,7 +96,10 @@ class cifar10_dataset(Dataset):
         ## TO DO ##
         # You should read the image according to the file path and apply transform to the images
         # Use "PIL.Image.open" to read image and apply transform
+        path = os.path.join(self.prefix, self.images[idx])
+        img = Image.open(path, mode='r')
+        img = self.transform(img)
         
         # You shall return image, label with type "long tensor" if it's training set
-        pass
+        return img, self.labels[idx]
         

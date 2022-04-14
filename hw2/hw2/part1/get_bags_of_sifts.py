@@ -31,7 +31,7 @@ def get_bags_of_sifts(image_paths):
     Output : 
         image_feats : (N, d) feature, each row represent a feature of an image
     '''
-    print('Start extracting feature in training set...')
+    print('Extracting Features...')
 
     image_feats = []
 
@@ -40,15 +40,19 @@ def get_bags_of_sifts(image_paths):
 
     num_of_cluster = vocab.shape[0]
 
+    i = 0
+    print(f'total paths: {len(image_paths)}')
     for path in image_paths:
+        print(f'current path: {i}')
+        i += 1
         img = np.array(Image.open(path))
         _, descriptors = dsift(img, step=5, fast=True)
         nearest_cluster = []
-        for descriptor in descriptors:
-            # find nearest cluster for each feature(descriptor)
-            distance_list = np.array([distance.cdist(np.expand_dims(descriptor, axis=0), np.expand_dims(v, axis=0), 'euclidean') for v in vocab]).flatten()
-            nearest_cluster.append(distance_list.argmin())
-        cluster_histogram, _ = np.histogram(nearest_cluster, bins=np.arange(num_of_cluster))
+        distance_list = distance.cdist(descriptors, vocab, 'euclidean')
+        nearest_cluster = np.argmin(distance_list, axis=1)
+
+        cluster_histogram, _ = np.histogram(nearest_cluster, bins=np.arange(num_of_cluster), density=True)
+        # cluster_histogram = (cluster_histogram - cluster_histogram.mean()) / np.linalg.norm(cluster_histogram)
         image_feats.append(cluster_histogram.tolist())
 
     

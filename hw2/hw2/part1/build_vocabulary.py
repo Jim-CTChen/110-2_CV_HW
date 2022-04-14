@@ -59,10 +59,13 @@ def build_vocabulary(image_paths, vocab_size):
     print('Start building vocabulary...')
 
     all_descriptors = []
+    i = 0
     for path in image_paths:
+        print('path num: {i}')
         img = np.array(Image.open(path))
         _, descriptors = dsift(img, step=5, fast=True)
         all_descriptors.append(descriptors)
+        i += 1
         # print(f'descriptor shape: {descriptor.shape}')
 
     all_descriptors = np.array(all_descriptors).reshape(-1, 128)

@@ -2,3 +2,5 @@
 *.zip
 *submission/
 *report*
+*.pkl
+*__pycache__/
